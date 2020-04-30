@@ -1,4 +1,4 @@
-#LIVE STREAMER
+# LIVE STREAMER
 
 A simple client-server application to live stream the video captured via webcam/video file over the network.
 We start a server echoing data on the first stream the client opens,then connect with a client. 
