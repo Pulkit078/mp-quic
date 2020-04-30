@@ -7,6 +7,8 @@ import (
 	"crypto/x509"
 	"encoding/binary"
 	"encoding/pem"
+	"flag"
+
 	//"fmt"
 	"gocv.io/x/gocv"
 	"math/big"
@@ -16,19 +18,21 @@ import (
 
 const addr = "localhost:4242"
 
-//const message = "foobar"
-
 // We start a server echoing data on the first stream the client opens,
 // then connect with a client, send the message, and wait for its receipt.
 func main() {
-	err := clientMain()
+	multipath := flag.Bool("m", false, "multipath")
+	err := clientMain(*multipath)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func clientMain() error {
-	session, err := quic.DialAddr(addr, &tls.Config{InsecureSkipVerify: true}, nil)
+func clientMain(multipath bool) error {
+	cfgClient := &quic.Config{
+		CreatePaths: multipath,
+	}
+	session, err := quic.DialAddr(addr, &tls.Config{InsecureSkipVerify: true}, cfgClient)
 	if err != nil {
 		return err
 	}
